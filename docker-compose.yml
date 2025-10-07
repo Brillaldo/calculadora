@@ -1,0 +1,37 @@
+services:
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin_user 
+      MONGO_INITDB_ROOT_PASSWORD: web3
+    ports:
+      - "27017:27017"
+    networks:
+      - mongo-network
+
+    
+
+  calculadora:
+    image: calculadora-fast-api
+    ports:
+      - "8089:8000"
+    networks:
+      - mongo-network
+  frontend:
+    build: ./frontend
+    ports:
+     - "3000:3000"
+    volumes:
+         - ./frontend:/app #Copia los archivos del ./frontend a una nueva carpeta llamad /app
+         - /app/node_modules # Crea una nueva carpeta de node_modules; evita problemas
+    environment:
+       - CHOKIDAR_USEPOLLING=true
+    depends_on:
+       - calculadora
+    networks:
+      - mongo-network
+
+networks: 
+  mongo-network:
+    driver: bridge
