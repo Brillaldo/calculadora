@@ -19,7 +19,7 @@ function App() {
     setResultado(data.resultado);
     obtenerHistorial();
   };
-
+//h
   useEffect(() => {
     obtenerHistorial();
   }, []);

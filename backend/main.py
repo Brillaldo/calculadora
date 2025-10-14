@@ -11,7 +11,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
+#h
 # Conexión a MongoDB
 mongo_client = MongoClient("mongodb://admin_user:web3@mongo:27017/")
 database = mongo_client["practica1"]
