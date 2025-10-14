@@ -1,14 +1,16 @@
-# Imagen base ligera de Python
- FROM gcr.io/google-containers/python:3.5.1-slim
- # Crear directorio de trabajo
- WORKDIR /app
- # Copiar dependencias
- COPY requirements.txt .
- # Instalar dependencias
- RUN pip install --no-cache-dir -r requirements.txt
- # Copiar el código de la aplicación
- COPY . .
- # Exponer el puerto donde correrá la app
- EXPOSE 8000
- # Comando para iniciar la API
- CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# Imagen base moderna (3.11 o 3.10)
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# (Opcional) paquetes nativos si tus deps lo requieren
+# RUN apt-get update && apt-get install -y --no-install-recommends build-essential && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+# Para dev; en prod quita --reload
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
