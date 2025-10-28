@@ -1,0 +1,43 @@
+# monitoring/monitoring-docker-compose.yml  (sin "version:")
+services:
+  prometheus:
+    image: quay.io/prometheus/prometheus:v2.55.0   # 👈 tag concreto
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus.yaml:/etc/prometheus/prometheus.yaml:ro
+      - prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yaml
+      - --storage.tsdb.path=/prometheus
+      - --web.enable-lifecycle
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring-net
+
+  grafana:
+    image: ghcr.io/grafana/grafana:11.3.0          # 👈 tag concreto (en GHCR no hay "latest")
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SERVER_DOMAIN=localhost
+      - GF_SERVER_ROOT_URL=http://localhost:3001
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - monitoring-net
+    depends_on:
+      - prometheus
+
+networks:
+  monitoring-net:
+    name: monitoring-net   # mismo nombre que en el compose principal
+
+volumes:
+  prometheus_data:
+  grafana_data:
