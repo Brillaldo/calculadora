@@ -1,42 +1,38 @@
-# docker-compose.yml  (principal)
+version: '3.8'
 services:
   mongo:
     image: mirror.gcr.io/library/mongo:8
     platform: linux/amd64
-    restart: unless-stopped
+    restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin_user
       MONGO_INITDB_ROOT_PASSWORD: web3
     ports:
       - "27017:27017"
     networks:
-      - monitoring-net
+      - mongo-network
 
   calculadora:
     image: ghcr.io/brillaldo/calculadora-backend:latest
     pull_policy: always
     platform: linux/amd64
-    restart: unless-stopped
-    depends_on:
-      - mongo
     ports:
       - "8000:8000"
     networks:
-      monitoring-net:
-        aliases:
-          - backend   # 👈 para que Prometheus "vea" backend:8000
+      - mongo-network
+    depends_on:
+      - mongo
 
   frontend:
     image: ghcr.io/brillaldo/calculadora-frontend:latest
     platform: linux/amd64
-    restart: unless-stopped
-    depends_on:
-      - calculadora
     ports:
       - "3000:3000"
+    depends_on:
+      - calculadora
     networks:
-      - monitoring-net
+      - mongo-network
 
 networks:
-  monitoring-net:
-    name: monitoring-net  # 👈 mismo nombre que usarás en /monitoring
+  mongo-network:
+    driver: bridge
