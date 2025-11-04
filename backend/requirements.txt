@@ -5,4 +5,3 @@ pytest
 mongomock
 httpx
 prometheus_fastapi_instrumentator
-loki-logger-handler==1.1.2
