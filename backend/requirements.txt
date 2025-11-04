@@ -1,7 +1,9 @@
-fastapi
-uvicorn
-pymongo
-pytest 
-mongomock
-httpx
-prometheus_fastapi_instrumentator
+fastapi==0.120.4
+uvicorn[standard]==0.38.0
+pymongo==4.15.3
+pytest==8.4.2
+mongomock==4.3.0
+httpx==0.28.1
+prometheus-fastapi-instrumentator==6.1.0
+loki-logger-handler==1.1.2
+requests==2.32.5
